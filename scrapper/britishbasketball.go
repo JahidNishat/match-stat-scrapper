@@ -6,10 +6,11 @@ import (
 	"github.com/go-rod/rod"
 	"log"
 	"match_statistics_scrapper/models"
+	"match_statistics_scrapper/utils"
 	"strings"
 )
 
-func ScrapsBritishBasketBall(url string) {
+func ScrapsBritishBasketBall(url string) []*models.MatchStatResponse {
 	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
 
 	// Get the HTML content after JavaScript execution
@@ -26,7 +27,7 @@ func ScrapsBritishBasketBall(url string) {
 	}
 
 	// Find elements by tag name or class
-	var allStat []models.BritishBasketBallStat
+	var allStat []*models.MatchStatResponse
 	doc.Find("table").Each(func(i int, s *goquery.Selection) {
 		allTr := s.Find("tbody").Find("tr")
 		allTr.Each(func(k int, s2 *goquery.Selection) {
@@ -35,27 +36,28 @@ func ScrapsBritishBasketBall(url string) {
 			allTd.Each(func(j int, element2 *goquery.Selection) {
 				trData = append(trData, element2.Text())
 			})
-			statBnxt := models.BritishBasketBallStat{
-				Team:    strings.TrimSpace(trData[0]),
-				Date:    strings.TrimSpace(trData[1]),
-				Min:     strings.TrimSpace(trData[2]),
-				FgP:     strings.TrimSpace(trData[5]),
-				ThreePP: strings.TrimSpace(trData[8]),
-				FtP:     strings.TrimSpace(trData[11]),
-				Off:     strings.TrimSpace(trData[12]),
-				Def:     strings.TrimSpace(trData[13]),
-				Reb:     strings.TrimSpace(trData[14]),
-				Ast:     strings.TrimSpace(trData[15]),
-				Stl:     strings.TrimSpace(trData[16]),
-				Blk:     strings.TrimSpace(trData[17]),
-				Pf:      strings.TrimSpace(trData[18]),
-				To:      strings.TrimSpace(trData[19]),
-				Pts:     strings.TrimSpace(trData[20]),
+
+			statResp := &models.MatchStatResponse{
+				Date:   utils.BritishBasketBallDate(strings.TrimSpace(trData[1])),
+				Opp:    strings.TrimSpace(trData[0]),
+				Result: "",
+				Min:    strings.TrimSpace(trData[2]),
+				FGP:    strings.TrimSpace(trData[5]),
+				FTP:    strings.TrimSpace(trData[11]),
+				ThreeP: strings.TrimSpace(trData[8]),
+				REB:    strings.TrimSpace(trData[14]),
+				AST:    strings.TrimSpace(trData[15]),
+				BLK:    strings.TrimSpace(trData[17]),
+				STL:    strings.TrimSpace(trData[16]),
+				PF:     strings.TrimSpace(trData[18]),
+				TO:     strings.TrimSpace(trData[19]),
+				PTS:    strings.TrimSpace(trData[20]),
 			}
-			allStat = append(allStat, statBnxt)
+			allStat = append(allStat, statResp)
+			fmt.Println(*statResp)
 		})
 
 	})
 	fmt.Println(allStat)
-	return
+	return allStat
 }

@@ -5,29 +5,22 @@ import (
 	"github.com/gocolly/colly"
 	"log"
 	"match_statistics_scrapper/models"
+	"match_statistics_scrapper/utils"
 )
 
-func ScrapsEuroBasket(url string) {
+func ScrapsEuroBasket(url string) []*models.MatchStatResponse {
 	// creating a new Colly instance
 	c := colly.NewCollector()
 
 	var rows [][]string
 
-	c.OnRequest(func(r *colly.Request) {
-		fmt.Println("Visiting: ", r.URL)
-	})
-
 	c.OnError(func(_ *colly.Response, err error) {
 		log.Println("Something went wrong: ", err)
 	})
 
-	c.OnResponse(func(r *colly.Response) {
-		fmt.Println("Page visited: ", r.Request.URL)
-	})
-
 	// scraping logic section.gamelogWidget
 	c.OnHTML("tbody", func(e *colly.HTMLElement) {
-		e.ForEach("#23", func(_ int, row *colly.HTMLElement) {
+		e.ForEach("#187", func(_ int, row *colly.HTMLElement) {
 			var cells []string
 
 			row.ForEach("td", func(_ int, cell *colly.HTMLElement) {
@@ -44,30 +37,26 @@ func ScrapsEuroBasket(url string) {
 		fmt.Println("Couldn't Visit")
 	}
 
-	stats := []models.EuroBasketStat{}
+	stats := []*models.MatchStatResponse{}
 	for _, row := range rows {
-		data := models.EuroBasketStat{
-			Date:        row[0],
-			Team:        row[1],
-			AgainstTeam: row[2],
-			Result:      row[3],
-			Min:         row[4],
-			Pts:         row[5],
-			TwoFGP:      row[6],
-			ThreeFGP:    row[7],
-			FT:          row[8],
-			RO:          row[9],
-			RD:          row[10],
-			RT:          row[11],
-			AS:          row[12],
-			PF:          row[13],
-			BS:          row[14],
-			ST:          row[15],
-			TO:          row[16],
-			RNK:         row[17],
+		statResp := &models.MatchStatResponse{
+			Date:   utils.EuroBasketDate(row[0]),
+			Opp:    row[2],
+			Result: row[3],
+			Min:    row[4],
+			FGP:    row[6],
+			FTP:    row[8],
+			ThreeP: row[7],
+			REB:    row[11],
+			AST:    row[12],
+			BLK:    row[14],
+			STL:    row[15],
+			PF:     row[13],
+			TO:     row[16],
+			PTS:    row[5],
 		}
-		stats = append(stats, data)
+		stats = append(stats, statResp)
 	}
 	fmt.Println("EuroBasketStat Scrapper result : ", stats)
-	return
+	return stats
 }

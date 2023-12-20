@@ -2,4 +2,11 @@ telegram:
   token: 6455629506:AAEQAFzzB0RYxpyYRZEsx2ZuLWN_dgcA_EM
   chatIDList:
     - 1247260748
-    - 5256209706
+  adminID: 1247260748
+
+database:
+  host: localhost
+  port: 5432
+  password: 1234
+  user: postgres
+  dbname: match_stats

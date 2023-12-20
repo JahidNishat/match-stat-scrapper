@@ -6,10 +6,9 @@ import (
 	"log"
 	"match_statistics_scrapper/models"
 	"match_statistics_scrapper/utils"
-	"strings"
 )
 
-func ScrapsBleague(url string) []*models.MatchStatResponse {
+func ScrapsBasketBallEuroBasket(url string) []*models.MatchStatResponse {
 	// creating a new Colly instance
 	c := colly.NewCollector()
 
@@ -20,8 +19,8 @@ func ScrapsBleague(url string) []*models.MatchStatResponse {
 	})
 
 	// scraping logic section.gamelogWidget
-	c.OnHTML("#scores", func(e *colly.HTMLElement) {
-		e.ForEach("tr", func(_ int, row *colly.HTMLElement) {
+	c.OnHTML("tbody", func(e *colly.HTMLElement) {
+		e.ForEach("#23", func(_ int, row *colly.HTMLElement) {
 			var cells []string
 
 			row.ForEach("td", func(_ int, cell *colly.HTMLElement) {
@@ -41,23 +40,23 @@ func ScrapsBleague(url string) []*models.MatchStatResponse {
 	stats := []*models.MatchStatResponse{}
 	for _, row := range rows {
 		statResp := &models.MatchStatResponse{
-			Date:   utils.BleagueDate(strings.TrimSpace(row[0])),
-			Opp:    strings.TrimSpace(row[1]),
-			Result: strings.TrimSpace(row[3]),
-			Min:    strings.TrimSpace(row[5]),
-			FGP:    strings.TrimSpace(row[9]),
-			FTP:    strings.TrimSpace(row[18]),
-			ThreeP: strings.TrimSpace(row[15]),
-			REB:    strings.TrimSpace(row[23]),
-			AST:    strings.TrimSpace(row[24]),
-			BLK:    strings.TrimSpace(row[28]),
-			STL:    strings.TrimSpace(row[27]),
-			PF:     strings.TrimSpace(row[31]),
-			TO:     strings.TrimSpace(row[26]),
-			PTS:    strings.TrimSpace(row[6]),
+			Date:   utils.EuroBasketDate(row[0]),
+			Opp:    row[2],
+			Result: row[3],
+			Min:    row[4],
+			FGP:    row[6],
+			FTP:    row[8],
+			ThreeP: row[7],
+			REB:    row[11],
+			AST:    row[12],
+			BLK:    row[14],
+			STL:    row[15],
+			PF:     row[13],
+			TO:     row[16],
+			PTS:    row[5],
 		}
 		stats = append(stats, statResp)
 	}
-	fmt.Println("Bleague Scrapper result : ", stats)
+	fmt.Println("EuroBasketStat Scrapper result : ", stats)
 	return stats
 }

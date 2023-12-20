@@ -6,10 +6,11 @@ import (
 	"github.com/go-rod/rod"
 	"log"
 	"match_statistics_scrapper/models"
+	"match_statistics_scrapper/utils"
 	"strings"
 )
 
-func ScrapsBnxt(url string) []models.BnxtStat {
+func ScrapsBnxt(url string) []*models.MatchStatResponse {
 	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
 
 	// Get the HTML content after JavaScript execution
@@ -27,7 +28,7 @@ func ScrapsBnxt(url string) []models.BnxtStat {
 
 	fmt.Println("Document after request ", doc.Text())
 	// Find elements by tag name or class
-	var allStat []models.BnxtStat
+	var allStat []*models.MatchStatResponse
 	doc.Find("#match_stats_table").Each(func(i int, s *goquery.Selection) {
 		allTr := s.Find("tr")
 		allTr.Each(func(i int, s2 *goquery.Selection) {
@@ -37,29 +38,24 @@ func ScrapsBnxt(url string) []models.BnxtStat {
 				trData = append(trData, element2.Text())
 			})
 			if len(trData) == 28 {
-				statBnxt := models.BnxtStat{
-					GameDate: trData[0],
-					Game:     trData[1],
-					Result:   trData[2],
-					PTS:      trData[3],
-					Min:      trData[4],
-					TwoP:     trData[7],
-					ThreeP:   trData[10],
-					FgP:      trData[13],
-					FtP:      trData[16],
-					Dr:       trData[17],
-					Or:       trData[18],
-					Tot:      trData[19],
-					Fp:       trData[20],
-					Df:       trData[21],
-					Ast:      trData[22],
-					St:       trData[23],
-					To:       trData[24],
-					Bs:       trData[25],
-					Br:       trData[26],
-					Eff:      trData[27],
+				statResp := &models.MatchStatResponse{
+					Date:   utils.BnxtDate(trData[0]),
+					Opp:    trData[1],
+					Result: trData[2],
+					Min:    trData[4],
+					FGP:    trData[13],
+					FTP:    trData[16],
+					ThreeP: trData[10],
+					REB:    trData[19],
+					AST:    trData[22],
+					BLK:    trData[25],
+					STL:    trData[23],
+					PF:     trData[20],
+					TO:     trData[24],
+					PTS:    trData[3],
 				}
-				allStat = append(allStat, statBnxt)
+				allStat = append(allStat, statResp)
+				fmt.Println(statResp)
 			}
 		})
 

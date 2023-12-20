@@ -6,11 +6,11 @@ import (
 	"github.com/go-rod/rod"
 	"log"
 	"match_statistics_scrapper/models"
+	"match_statistics_scrapper/utils"
 	"strings"
 )
 
-func NblScrap(url string) []models.NblStat {
-
+func NblScrap(url string) []*models.MatchStatResponse {
 	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
 
 	// Get the HTML content after JavaScript execution
@@ -26,7 +26,7 @@ func NblScrap(url string) []models.NblStat {
 		log.Fatal(err)
 	}
 	// Find elements by tag name or class
-	var allStat []models.NblStat
+	var allStat []*models.MatchStatResponse
 	doc.Find(".player-game-logs").Each(func(i int, s *goquery.Selection) {
 		allTr := s.Find("tbody").Find("tr")
 		allTr.Each(func(i int, s2 *goquery.Selection) {
@@ -36,25 +36,27 @@ func NblScrap(url string) []models.NblStat {
 				trData = append(trData, element2.Text())
 			})
 			if len(trData) == 12 {
-				statNbl := models.NblStat{
-					Date: strings.TrimSpace(trData[0]),
-					//Opp:  strings.TrimSpace(trData[1]),
-					Min: strings.TrimSpace(trData[2]),
-					FgP: strings.TrimSpace(trData[3]),
-					FtP: strings.TrimSpace(trData[4]),
-					Reb: strings.TrimSpace(trData[5]),
-					Ast: strings.TrimSpace(trData[6]),
-					Blk: strings.TrimSpace(trData[7]),
-					Stl: strings.TrimSpace(trData[8]),
-					To:  strings.TrimSpace(trData[9]),
-					Pf:  strings.TrimSpace(trData[10]),
-					Pts: strings.TrimSpace(trData[11]),
+				statResp := &models.MatchStatResponse{
+					Date: utils.NblDate(strings.TrimSpace(trData[0])),
+					//Opp:    strings.TrimSpace(trData[1]),
+					Result: "",
+					Min:    strings.TrimSpace(trData[2]),
+					FGP:    strings.TrimSpace(trData[3]),
+					FTP:    strings.TrimSpace(trData[4]),
+					ThreeP: "",
+					REB:    strings.TrimSpace(trData[5]),
+					AST:    strings.TrimSpace(trData[6]),
+					BLK:    strings.TrimSpace(trData[7]),
+					STL:    strings.TrimSpace(trData[8]),
+					PF:     strings.TrimSpace(trData[10]),
+					TO:     strings.TrimSpace(trData[9]),
+					PTS:    strings.TrimSpace(trData[11]),
 				}
-				allStat = append(allStat, statNbl)
+				allStat = append(allStat, statResp)
 			}
 		})
 	})
 
-	fmt.Println(allStat)
+	fmt.Println(*allStat[0])
 	return allStat
 }
