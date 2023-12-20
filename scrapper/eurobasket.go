@@ -20,7 +20,7 @@ func ScrapsEuroBasket(url string) []*models.MatchStatResponse {
 
 	// scraping logic section.gamelogWidget
 	c.OnHTML("tbody", func(e *colly.HTMLElement) {
-		e.ForEach("#187", func(_ int, row *colly.HTMLElement) {
+		e.ForEach("tr[id]", func(_ int, row *colly.HTMLElement) {
 			var cells []string
 
 			row.ForEach("td", func(_ int, cell *colly.HTMLElement) {
@@ -56,7 +56,8 @@ func ScrapsEuroBasket(url string) []*models.MatchStatResponse {
 			PTS:    row[5],
 		}
 		stats = append(stats, statResp)
+		//fmt.Println(*statResp)
 	}
-	fmt.Println("EuroBasketStat Scrapper result : ", stats)
+	//fmt.Println("EuroBasketStat Scrapper result : ", stats)
 	return stats
 }

@@ -58,25 +58,24 @@ func FetchPlayerStats() {
 	}
 }
 
+var urlScrapFuncs = map[string]func(string) []*models.MatchStatResponse{
+	//"basketball.eurobasket":       scrapper.ScrapsBasketBallEuroBasket,
+	"eurobasket.com":              scrapper.ScrapsEuroBasket,
+	"espn.co":                     scrapper.EspnScrap,
+	"nbl.com.au":                  scrapper.NblScrap,
+	"bleague.jp":                  scrapper.ScrapsBleague,
+	"bnxtleague.com":              scrapper.ScrapsBnxt,
+	"britishbasketballleague.com": scrapper.ScrapsBritishBasketBall,
+	"210.140.77.209":              scrapper.ScrapsB3league,
+}
+
 func scrapFromUrl(url string) []*models.MatchStatResponse {
-	if strings.Contains(url, "basketball.eurobasket") {
-		return scrapper.ScrapsBasketBallEuroBasket(url)
-	} else if strings.Contains(url, "eurobasket.com") {
-		return scrapper.ScrapsEuroBasket(url)
-	} else if strings.Contains(url, "espn.co") {
-		return scrapper.EspnScrap(url)
-	} else if strings.Contains(url, "nbl.com.au") {
-		return scrapper.NblScrap(url)
-	} else if strings.Contains(url, "bleague.jp") {
-		return scrapper.ScrapsBleague(url)
-	} else if strings.Contains(url, "bnxtleague.com") {
-		return scrapper.ScrapsBnxt(url)
-	} else if strings.Contains(url, "britishbasketballleague.com") {
-		return scrapper.ScrapsBritishBasketBall(url)
-	} else if strings.Contains(url, "210.140.77.209") {
-		return scrapper.ScrapsB3league(url)
+	for key, scraperFunc := range urlScrapFuncs {
+		if strings.Contains(url, key) {
+			return scraperFunc(url)
+		}
 	}
 
-	fmt.Println("URL not supported : ", url)
+	fmt.Println("URL not supported:", url)
 	return nil
 }

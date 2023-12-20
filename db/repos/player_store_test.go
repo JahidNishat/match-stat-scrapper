@@ -30,6 +30,27 @@ func TestPlayersStore_InsertData(t *testing.T) {
 	tm.InsertData(&player)
 
 	player = models.PlayersData{
+		PlayerName: "Sean Bairstow",
+		Source:     "ESPN",
+		Url:        "https://www.espn.co.uk/mens-college-basketball/player/_/id/4593102/sean-bairstow",
+	}
+	tm.InsertData(&player)
+
+	player = models.PlayersData{
+		PlayerName: "Travis Roberts",
+		Source:     "ESPN",
+		Url:        "https://www.espn.co.uk/mens-college-basketball/player/_/id/4684734/travis-roberts",
+	}
+	tm.InsertData(&player)
+
+	player = models.PlayersData{
+		PlayerName: "Alex Schumacher",
+		Source:     "ESPN",
+		Url:        "https://www.espn.co.uk/mens-college-basketball/player/_/id/4712280/alex-schumacher",
+	}
+	tm.InsertData(&player)
+
+	player = models.PlayersData{
 		PlayerName: "Jacob Lampkin",
 		Source:     "eurobasket",
 		Url:        "https://basketball.eurobasket.com/player/Jacob-Lampkin/335999",
@@ -44,16 +65,16 @@ func TestPlayersStore_InsertData(t *testing.T) {
 	tm.InsertData(&player)
 
 	player = models.PlayersData{
-		PlayerName: "Sean Bairstow",
-		Source:     "ESPN",
-		Url:        "https://www.espn.co.uk/mens-college-basketball/player/_/id/4593102/sean-bairstow",
+		PlayerName: "Koen Sapwell",
+		Source:     "eurobasket",
+		Url:        "https://basketball.eurobasket.com/player/Koen-Sapwell/393132",
 	}
 	tm.InsertData(&player)
 
 	player = models.PlayersData{
-		PlayerName: "Travis Roberts",
-		Source:     "ESPN",
-		Url:        "https://www.espn.co.uk/mens-college-basketball/player/_/id/4684734/travis-roberts",
+		PlayerName: "Jamell Anderson",
+		Source:     "eurobasket",
+		Url:        "https://basketball.eurobasket.com/player/Jamell-Anderson/179475",
 	}
 	tm.InsertData(&player)
 
@@ -72,9 +93,9 @@ func TestPlayersStore_InsertData(t *testing.T) {
 	tm.InsertData(&player)
 
 	player = models.PlayersData{
-		PlayerName: "Jamell Anderson",
-		Source:     "eurobasket",
-		Url:        "https://basketball.eurobasket.com/player/Jamell-Anderson/179475",
+		PlayerName: "AJ Edu",
+		Source:     "bleague",
+		Url:        "https://www.bleague.jp/roster_detail/?PlayerID=51000301",
 	}
 	tm.InsertData(&player)
 
@@ -82,6 +103,13 @@ func TestPlayersStore_InsertData(t *testing.T) {
 		PlayerName: "Jamell Anderson",
 		Source:     "britishbasketballleague",
 		Url:        "https://www.britishbasketballleague.com/competitions/?WHurl=%2Fperson%2F6661%2Fgamelog%3F",
+	}
+	tm.InsertData(&player)
+
+	player = models.PlayersData{
+		PlayerName: "James Moors",
+		Source:     "bnxt",
+		Url:        "https://bnxtleague.com/en/player-statistics/?player_id=2882&amp;team\\_id=162",
 	}
 	tm.InsertData(&player)
 }
