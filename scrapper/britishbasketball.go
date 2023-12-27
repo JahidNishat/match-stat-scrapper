@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/go-rod/rod"
+	"github.com/go-rod/rod/lib/launcher"
 	"log"
 	"match_statistics_scrapper/models"
 	"match_statistics_scrapper/utils"
@@ -11,7 +12,9 @@ import (
 )
 
 func ScrapsBritishBasketBall(url string) []*models.MatchStatResponse {
-	page := rod.New().MustConnect().MustPage(url).MustWaitLoad()
+	path, _ := launcher.LookPath()
+	u := launcher.New().Bin(path).MustLaunch()
+	page := rod.New().ControlURL(u).MustConnect().MustPage(url).MustWaitLoad()
 
 	// Get the HTML content after JavaScript execution
 	pageStr := page.MustHTML()

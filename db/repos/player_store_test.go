@@ -9,6 +9,7 @@ import (
 )
 
 func TestPlayersStore_InsertData(t *testing.T) {
+	log.Println("Enteriing Test function .......")
 	viper.SetConfigFile("../../config.yaml")
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatalf("Error reading config file: %s", err)
@@ -105,4 +106,6 @@ func TestPlayersStore_InsertData(t *testing.T) {
 			continue
 		}
 	}
+
+	log.Println("Successfully Populated Players Data !!!!")
 }
