@@ -1,21 +1,16 @@
-package repos
+package seeder
 
 import (
-	"github.com/spf13/viper"
 	"log"
 	"match_statistics_scrapper/db"
+	"match_statistics_scrapper/db/repos"
 	"match_statistics_scrapper/models"
-	"testing"
 )
 
-func TestPlayersStore_InsertData(t *testing.T) {
-	log.Println("Entering Test function .......")
-	viper.SetConfigFile("../../config.yaml")
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file: %s", err)
-	}
+func PlayerDataSeeder() {
+	log.Println("Preparing Player Data .......")
 
-	tm := &PlayersStore{DB: db.ConnectDB()}
+	tm := &repos.PlayersStore{DB: db.ConnectDB()}
 	players := []models.PlayersData{
 		{
 			PlayerName: "Max Mackinnon",

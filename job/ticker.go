@@ -7,7 +7,8 @@ import (
 )
 
 func StartTicker() {
-	ticker := time.NewTicker(30 * time.Second)
+	ticker := time.NewTicker(1 * time.Minute)
+
 	defer ticker.Stop()
 
 	for {
@@ -15,7 +16,7 @@ func StartTicker() {
 		case <-ticker.C:
 			log.Println("######################### Started Fetching #########################")
 			processor.FetchPlayerStats()
-			log.Println("######################### Finished Fetching #########################")
+			log.Println("######################### Finished Fetching #########################\n\n")
 		}
 	}
 }

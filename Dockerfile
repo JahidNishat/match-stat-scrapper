@@ -11,7 +11,7 @@ COPY . .
 
 RUN go build -o myapp
 
-FROM golang:alpine
+FROM alpine
 
 WORKDIR /app
 
@@ -23,8 +23,3 @@ COPY --from=builder /app/myapp /app/myapp
 COPY --from=builder /app/config.yaml /app/config.yaml
 
 ENTRYPOINT ["./myapp"]
-
-
-
-
-

@@ -26,9 +26,19 @@ func FetchPlayerStats() {
 	}
 
 	for _, player := range playersData {
+		var dataScrapped []*models.MatchStatResponse
 		log.Println("Scrapping for ", player.PlayerName)
 		url := player.Url
-		dataScrapped := scrapFromUrl(url)
+
+		func() {
+			defer func() {
+				if r := recover(); r != nil {
+					log.Printf("Panic From %v\n", url)
+					log.Println("Panic Reason : ", r)
+				}
+			}()
+			dataScrapped = scrapFromUrl(url)
+		}()
 
 		for _, data := range dataScrapped {
 			data.PlayerName = player.PlayerName

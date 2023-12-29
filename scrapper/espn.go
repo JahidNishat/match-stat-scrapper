@@ -48,7 +48,6 @@ func EspnScrap(url string) []*models.MatchStatResponse {
 				allStatResp = append(allStatResp, statResp)
 			}
 		})
-		fmt.Println("Espn Scrapper Result", allStatResp)
 	})
 
 	// visiting the target page
@@ -57,5 +56,7 @@ func EspnScrap(url string) []*models.MatchStatResponse {
 		fmt.Println("Error while visiting url : ", err)
 		return nil
 	}
+
+	fmt.Println("Espn Scrapper Result : ", allStatResp)
 	return allStatResp
 }

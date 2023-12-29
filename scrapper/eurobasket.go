@@ -58,6 +58,6 @@ func ScrapsEuroBasket(url string) []*models.MatchStatResponse {
 		stats = append(stats, statResp)
 		//fmt.Println(*statResp)
 	}
-	//fmt.Println("EuroBasketStat Scrapper result : ", stats)
+	fmt.Println("EuroBasketStat Scrapper result : ", stats)
 	return stats
 }

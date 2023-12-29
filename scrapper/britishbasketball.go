@@ -14,11 +14,14 @@ import (
 func ScrapsBritishBasketBall(url string) []*models.MatchStatResponse {
 	path, _ := launcher.LookPath()
 	u := launcher.New().Bin(path).MustLaunch()
-	page := rod.New().ControlURL(u).MustConnect().MustPage(url).MustWaitLoad()
+	browser := rod.New().ControlURL(u).MustConnect()
+	defer browser.Close()
+
+	page := browser.MustPage(url).MustWaitLoad()
+	defer page.MustClose()
 
 	// Get the HTML content after JavaScript execution
 	pageStr := page.MustHTML()
-	page.MustClose()
 	if pageStr == "" {
 		fmt.Println("Page not found in British Basket Ball scrapping, please retry")
 	}
@@ -57,10 +60,10 @@ func ScrapsBritishBasketBall(url string) []*models.MatchStatResponse {
 				PTS:    strings.TrimSpace(trData[20]),
 			}
 			allStat = append(allStat, statResp)
-			fmt.Println(*statResp)
+			//fmt.Println(*statResp)
 		})
 
 	})
-	fmt.Println(allStat)
+	fmt.Println("British Basketball Scrapper result : ", allStat)
 	return allStat
 }

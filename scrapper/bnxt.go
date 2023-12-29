@@ -14,11 +14,14 @@ import (
 func ScrapsBnxt(url string) []*models.MatchStatResponse {
 	path, _ := launcher.LookPath()
 	u := launcher.New().Bin(path).MustLaunch()
-	page := rod.New().ControlURL(u).MustConnect().MustPage(url).MustWaitLoad()
+	browser := rod.New().ControlURL(u).MustConnect()
+	defer browser.Close()
+
+	page := browser.MustPage(url).MustWaitLoad()
+	defer page.MustClose()
 
 	// Get the HTML content after JavaScript execution
 	pageStr := page.MustHTML()
-	page.MustClose()
 	if pageStr == "" {
 		fmt.Println("Page not found in BNXT scrapping, please retry")
 	}
@@ -29,7 +32,7 @@ func ScrapsBnxt(url string) []*models.MatchStatResponse {
 		log.Fatal(err)
 	}
 
-	fmt.Println("Document after request ", doc.Text())
+	//fmt.Println("Document after request ", doc.Text())
 	// Find elements by tag name or class
 	var allStat []*models.MatchStatResponse
 	doc.Find("#match_stats_table").Each(func(i int, s *goquery.Selection) {
@@ -58,11 +61,11 @@ func ScrapsBnxt(url string) []*models.MatchStatResponse {
 					PTS:    trData[3],
 				}
 				allStat = append(allStat, statResp)
-				fmt.Println(statResp)
+				//fmt.Println(statResp)
 			}
 		})
 
 	})
-	fmt.Println(allStat)
+	fmt.Println("BNXT Scrapper Result : ", allStat)
 	return allStat
 }
