@@ -1,19 +1,31 @@
-version: '3.8'
+version: '3.1'
 
 services:
-  db:
-    image: postgres
+  telebot-db:
+    image: 'postgres:alpine'
+    ports:
+      - '5432:5432'
     environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "12345"
-      POSTGRES_DB: "postgres"
-    ports:
-      - "5433:5432"
-  web:
+      - POSTGRES_DB=basket_stat
+      - POSTGRES_USER=telebot
+      - POSTGRES_PASSWORD=telebot13572468
+    volumes:
+      - './storage/postgres:/var/lib/postgresql/plancrafter'
+    networks:
+      - spring-cloud-network
+  statbot:
+    container_name: StatBot
+    platform: linux/amd64
     build:
+      context: ./
       dockerfile: Dockerfile
-    container_name: my-app
-    depends_on:
-      - db
-    ports:
-      - "8080:8080"
+    image: aarif93/statbot:v0.0.8
+#    ports:
+#      - "1212:1212"
+    networks:
+      - spring-cloud-network
+networks:
+  spring-cloud-network:
+    driver: bridge
+
+

@@ -7,7 +7,7 @@ import (
 )
 
 func StartTicker() {
-	ticker := time.NewTicker(1 * time.Minute)
+	ticker := time.NewTicker(5 * time.Minute)
 
 	defer ticker.Stop()
 
@@ -15,6 +15,7 @@ func StartTicker() {
 		select {
 		case <-ticker.C:
 			log.Println("######################### Started Fetching #########################")
+
 			processor.FetchPlayerStats()
 			log.Println("######################### Finished Fetching #########################\n\n")
 		}

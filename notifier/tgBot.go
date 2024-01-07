@@ -10,6 +10,7 @@ import (
 	"match_statistics_scrapper/db"
 	"match_statistics_scrapper/db/repos"
 	"match_statistics_scrapper/models"
+	"match_statistics_scrapper/processor"
 	"strconv"
 	"strings"
 )
@@ -67,6 +68,13 @@ func ServeTgBot() error {
 			if messageText == "/start" {
 				// Send a welcome message
 				message := tgbotapi.NewMessage(chatID, "Hello! ")
+				_, err := bot.Send(message)
+				if err != nil {
+					log.Println(err)
+				}
+			} else if messageText == "/check" {
+				// Send a welcome message
+				message := tgbotapi.NewMessage(chatID, "Ticker :"+strconv.Itoa(processor.Counter))
 				_, err := bot.Send(message)
 				if err != nil {
 					log.Println(err)
