@@ -1,12 +1,13 @@
 telegram:
-  token: 6455629506:AAEQAFzzB0RYxpyYRZEsx2ZuLWN_dgcA_EM
+  token: hh
   chatIDList:
-    - 1247260748
-  adminID: 1247260748
+    - 1167687440
+  adminID: 1167687440
 
 database:
-  host: db
+  host: telebot-db
+#  host: localhost
   port: 5432
-  password: 12345
-  user: postgres
-  dbname: postgres
+  password: telebot13572468
+  user: telebot
+  dbname: basket_stat

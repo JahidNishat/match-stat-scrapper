@@ -15,6 +15,7 @@ import (
 )
 
 func FetchPlayerStats() {
+	notifier.Counter++
 	ps := repos.PlayersStore{DB: db.ConnectDB()}
 	ss := repos.StatsStore{DB: db.ConnectDB()}
 
@@ -38,33 +39,33 @@ func FetchPlayerStats() {
 				}
 			}()
 			dataScrapped = scrapFromUrl(url)
-		}()
 
-		for _, data := range dataScrapped {
-			data.PlayerName = player.PlayerName
-			data.Source = url
+			for _, data := range dataScrapped {
+				data.PlayerName = player.PlayerName
+				data.Source = url
 
-			stringified := utils.StringifyStruct(*data)
-			hashed := utils.GetHashOfData(stringified)
+				stringified := utils.StringifyStruct(*data)
+				hashed := utils.GetHashOfData(stringified)
 
-			statsData, err := ss.FindHash(hashed)
-			if errors.Is(err, gorm.ErrRecordNotFound) && statsData == nil {
-				err = notifier.PublishToSubscribers(stringified)
-				if err != nil {
-					fmt.Println("Failed while sending the update")
-					continue
+				statsData, err := ss.FindHash(hashed)
+				if errors.Is(err, gorm.ErrRecordNotFound) && statsData == nil {
+					err = notifier.PublishToSubscribers(stringified)
+					if err != nil {
+						fmt.Println("Failed while sending the update")
+						continue
+					}
+					// updating hash data
+					err = ss.InsertData(&models.ScrappedData{
+						Hash: hashed,
+						Data: stringified,
+					})
+					if err != nil {
+						return
+					}
+					log.Printf("\n\nSuccessfully published stats of\nPlayer Name : %v,\nSource : %v,\nDate: %v\nData : %v\n\n", data.PlayerName, url, data.Date, stringified)
 				}
-				// updating hash data
-				err = ss.InsertData(&models.ScrappedData{
-					Hash: hashed,
-					Data: stringified,
-				})
-				if err != nil {
-					return
-				}
-				log.Printf("\n\nSuccessfully published stats of\nPlayer Name : %v,\nSource : %v,\nDate: %v\nData : %v\n\n", data.PlayerName, url, data.Date, stringified)
 			}
-		}
+		}()
 	}
 }
 

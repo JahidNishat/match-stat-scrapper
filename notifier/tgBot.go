@@ -47,6 +47,8 @@ func LoadAdmin() {
 	return
 }
 
+var Counter = 0
+
 func ServeTgBot() error {
 	ss := repos.SubscriberStore{DB: db.ConnectDB()}
 	bot := GetTgBot()
@@ -67,6 +69,13 @@ func ServeTgBot() error {
 			if messageText == "/start" {
 				// Send a welcome message
 				message := tgbotapi.NewMessage(chatID, "Hello! ")
+				_, err := bot.Send(message)
+				if err != nil {
+					log.Println(err)
+				}
+			} else if messageText == "/check" {
+				// Send a welcome message
+				message := tgbotapi.NewMessage(chatID, "Ticker :"+strconv.Itoa(Counter))
 				_, err := bot.Send(message)
 				if err != nil {
 					log.Println(err)
