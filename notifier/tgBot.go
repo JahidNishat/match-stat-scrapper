@@ -10,7 +10,6 @@ import (
 	"match_statistics_scrapper/db"
 	"match_statistics_scrapper/db/repos"
 	"match_statistics_scrapper/models"
-	"match_statistics_scrapper/processor"
 	"strconv"
 	"strings"
 )
@@ -48,6 +47,8 @@ func LoadAdmin() {
 	return
 }
 
+var Counter = 0
+
 func ServeTgBot() error {
 	ss := repos.SubscriberStore{DB: db.ConnectDB()}
 	bot := GetTgBot()
@@ -74,7 +75,7 @@ func ServeTgBot() error {
 				}
 			} else if messageText == "/check" {
 				// Send a welcome message
-				message := tgbotapi.NewMessage(chatID, "Ticker :"+strconv.Itoa(processor.Counter))
+				message := tgbotapi.NewMessage(chatID, "Ticker :"+strconv.Itoa(Counter))
 				_, err := bot.Send(message)
 				if err != nil {
 					log.Println(err)

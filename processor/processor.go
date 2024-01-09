@@ -14,10 +14,8 @@ import (
 	"strings"
 )
 
-var Counter = 0
-
 func FetchPlayerStats() {
-	Counter++
+	notifier.Counter++
 	ps := repos.PlayersStore{DB: db.ConnectDB()}
 	ss := repos.StatsStore{DB: db.ConnectDB()}
 
