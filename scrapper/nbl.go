@@ -9,6 +9,7 @@ import (
 	"match_statistics_scrapper/models"
 	"match_statistics_scrapper/utils"
 	"strings"
+	"time"
 )
 
 func NblScrap(url string) []*models.MatchStatResponse {
@@ -17,13 +18,13 @@ func NblScrap(url string) []*models.MatchStatResponse {
 	browser := rod.New().ControlURL(u).MustConnect()
 	defer browser.Close()
 
-	page := browser.MustPage(url).MustWaitLoad()
+	page := browser.Timeout(1 * time.Minute).MustPage(url).MustWaitLoad()
 	defer page.MustClose()
 
 	// Get the HTML content after JavaScript execution
 	pageStr := page.MustHTML()
 	if pageStr == "" {
-		fmt.Println("Page not found in BNXT scrapping, please retry")
+		fmt.Println("Page not found in NBL scrapping, please retry")
 	}
 
 	// Parse the HTML document
