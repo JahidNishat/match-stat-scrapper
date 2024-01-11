@@ -9,6 +9,7 @@ import (
 	"match_statistics_scrapper/models"
 	"match_statistics_scrapper/utils"
 	"strings"
+	"time"
 )
 
 func ScrapsBritishBasketBall(url string) []*models.MatchStatResponse {
@@ -17,7 +18,7 @@ func ScrapsBritishBasketBall(url string) []*models.MatchStatResponse {
 	browser := rod.New().ControlURL(u).MustConnect()
 	defer browser.Close()
 
-	page := browser.MustPage(url).MustWaitLoad()
+	page := browser.Timeout(1 * time.Minute).MustPage(url).MustWaitLoad()
 	defer page.MustClose()
 
 	// Get the HTML content after JavaScript execution

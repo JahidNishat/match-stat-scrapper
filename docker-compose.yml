@@ -19,7 +19,7 @@ services:
     build:
       context: ./
       dockerfile: Dockerfile
-    image: aarif93/statbot:v0.0.9
+    image: aarif93/statbot:v0.1.0
 #    ports:
 #      - "1212:1212"
     networks:
